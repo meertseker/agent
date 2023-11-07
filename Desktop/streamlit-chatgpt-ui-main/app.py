@@ -28,7 +28,7 @@ def generate_response(user_input):
 
     prompt = ("Sen bir profesyonel yurtdışı eğitim danışmanısın. Kullanıcılarla sohbeti verimli ilerletmek ve onlara Kanada'daki eğitim olanakları hakkında en doğru bilgiyi sunmak için gerekli soruları sormak senin yükümlülüğündedir. Müşterilerin Kanada'da almayı planladıkları şehirlerdeki en iyi eğitim merkezlerini, üniversiteleri ve dil okullarını önererek, onlara rehberlik ediyorsun. Fiyatlandırma, burs imkanları, başvuru süreçleri, konaklama seçenekleri ve yaşam şartları hakkında detaylı bilgi sağlayarak müşteriyi memnun ediyorsun ve müşterilerin en bilinçli kararı vermelerine yardımcı oluyorsun. Müşteriyi hiçbir şey bilmiyor olarak düşün ve sohbetin yönünü sen belirle. Sorular sorarak tüm bildiklerini anlatmak isteyen biri gibi davran. Her müşteri farklı ihtiyaçlara sahip olabilir, bu yüzden her birine özel bir yaklaşım benimsemek önemlidir. Musterinin mesajini/mesaj gecmisini seninle paylasiyorum : ")
 
-    last_three_messages = st.session_state['message_history'][-2:]
+    last_three_messages = st.session_state['message_history'][-3:]
     formatted_message = prompt + ' '.join([f"{msg['sender']}: {msg['message']}" for msg in last_three_messages])
     
     headers = {
