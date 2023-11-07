@@ -26,20 +26,20 @@ if clear_button:
 def generate_response(user_input):
     st.session_state['message_history'].append({"sender": "User", "message": user_input})
 
-    prompt = ("Sen bir profesyonel eğitim danışmanısın. Müşterilerin kanadada almayı planladıkları sehirlerdeki en iyi eğitim merkezlerini, üniversiteleri ve dil okullarını önererek, onlara rehberlik ediyorsun. Fiyatlandırma, burs imkanları, başvuru süreçleri ve yaşam şartları hakkında detaylı bilgi sağlayarak musteriyi memnun ediyorsunmerha, müşterilerin en bilinçli kararı vermelerine yardımcı oluyorsun. Her bir müşteri sorusu geldiğinde, en doğru ve kapsamlı bilgiyi sağlamak için gerekli tüm ayrıntıları sorma ve müşteriyle etkileşimde bulunma sorumluluğuna sahipsin. Müşterilere açık, doğru ve yararlı yanıtlar ver, ve gerektiğinde daha fazla bilgi almak için ek sorular sor.  musteriyi hicbirsey bilmiyor olarak dusun ve sohbetin yonunu sen belirle sorular sorarak tum bildigini anlatmak siteyen biri gibi davran gibi konus ve SAKIN ben bir dil modeliyim deme her müşteri farklı ihtiyaçlara sahip olabilir, bu yüzden her birine özel bir yaklaşım benimsemek önemlidir. Musterinin mesajini/seninle mesaj gecmisini paylasiyorum : ")
+    prompt = ("Sen bir profesyonel yurtdışı eğitim danışmanısın. Kullanıcılarla sohbeti verimli ilerletmek ve onlara Kanada'daki eğitim olanakları hakkında en doğru bilgiyi sunmak için gerekli soruları sormak senin yükümlülüğündedir. Müşterilerin Kanada'da almayı planladıkları şehirlerdeki en iyi eğitim merkezlerini, üniversiteleri ve dil okullarını önererek, onlara rehberlik ediyorsun. Fiyatlandırma, burs imkanları, başvuru süreçleri, konaklama seçenekleri ve yaşam şartları hakkında detaylı bilgi sağlayarak müşteriyi memnun ediyorsun ve müşterilerin en bilinçli kararı vermelerine yardımcı oluyorsun. Müşteriyi hiçbir şey bilmiyor olarak düşün ve sohbetin yönünü sen belirle. Sorular sorarak tüm bildiklerini anlatmak isteyen biri gibi davran. Her müşteri farklı ihtiyaçlara sahip olabilir, bu yüzden her birine özel bir yaklaşım benimsemek önemlidir. Musterinin mesajini/mesaj gecmisini seninle paylasiyorum : ")
 
     last_three_messages = st.session_state['message_history'][-2:]
     formatted_message = prompt + ' '.join([f"{msg['sender']}: {msg['message']}" for msg in last_three_messages])
     
     headers = {
         'Content-Type': 'application/json',
-        'x-api-key': 'ask_a0cbc81c8285abd0283de79a115304b8'
+        'x-api-key': 'ask_dec03c35e4c4733481be6cd911cd9aa4'
     }
 
     data = [{"sender": "User", "message": formatted_message}]
 
     response = requests.post(
-        'https://api.askyourpdf.com/v1/chat/56a35672-daa5-40da-9fd1-f5494d3a3a9f?model_name=GPT3',
+        'https://api.askyourpdf.com/v1/chat/56a35672-daa5-40da-9fd1-f5494d3a3a9f?model_name=GPT4',
         headers=headers, data=json.dumps(data)
     )
 
