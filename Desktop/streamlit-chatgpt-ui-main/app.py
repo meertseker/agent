@@ -33,7 +33,7 @@ def generate_response(user_input):
     
     headers = {
         'Content-Type': 'application/json',
-        'x-api-key': 'ask_dec03c35e4c4733481be6cd911cd9aa4'
+        'x-api-key': 'ask_252fb9047ce742d3982e79de34cf0ad6'
     }
 
     data = [{"sender": "User", "message": formatted_message}]
