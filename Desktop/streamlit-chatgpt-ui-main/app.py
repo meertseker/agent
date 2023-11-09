@@ -1,7 +1,3 @@
-
-
-
-
 import streamlit as st
 import requests
 import json
@@ -15,7 +11,9 @@ if 'message_history' not in st.session_state:
     st.session_state['message_history'] = []
 
 # Sidebar
-st.sidebar.title("Sidebar")
+st.sidebar.title("Settings")
+api_key = st.sidebar.text_input("Enter your API Key", type="password")
+
 clear_button = st.sidebar.button("Clear Conversation", key="clear")
 
 # reset everything
@@ -23,17 +21,18 @@ if clear_button:
     st.session_state['message_history'] = []
 
 # generate a response
-def generate_response(user_input):
+def generate_response(user_input, api_key):
     st.session_state['message_history'].append({"sender": "User", "message": user_input})
 
-    prompt = ("Sen bir profesyonel yurtdışı eğitim danışmanısın. Kullanıcılarla sohbeti verimli ilerletmek ve onlara Kanada'daki eğitim olanakları hakkında en doğru bilgiyi sunmak için gerekli soruları sormak senin yükümlülüğündedir. Müşterilerin Kanada'da almayı planladıkları şehirlerdeki en iyi eğitim merkezlerini, üniversiteleri ve dil okullarını önererek, onlara rehberlik ediyorsun. Fiyatlandırma, burs imkanları, başvuru süreçleri, konaklama seçenekleri ve yaşam şartları hakkında detaylı bilgi sağlayarak müşteriyi memnun ediyorsun ve müşterilerin en bilinçli kararı vermelerine yardımcı oluyorsun. Müşteriyi hiçbir şey bilmiyor olarak düşün ve sohbetin yönünü sen belirle. Sorular sorarak tüm bildiklerini anlatmak isteyen biri gibi davran. Her müşteri farklı ihtiyaçlara sahip olabilir, bu yüzden her birine özel bir yaklaşım benimsemek önemlidir. Musterinin mesajini/mesaj gecmisini seninle paylasiyorum : ")
+    # The prompt for the chatbot
+    prompt = ("Sen bir profesyonel yurtdışı eğitim danışmanısın... [rest of the prompt]")
 
     last_three_messages = st.session_state['message_history'][-3:]
     formatted_message = prompt + ' '.join([f"{msg['sender']}: {msg['message']}" for msg in last_three_messages])
     
     headers = {
         'Content-Type': 'application/json',
-        'x-api-key': 'ask_639247f77e3e48a0f4337d11ad0afc64'
+        'x-api-key': api_key
     }
 
     data = [{"sender": "User", "message": formatted_message}]
@@ -67,14 +66,14 @@ with container:
         user_input = st.text_area("You:", key='input', height=100)
         submit_button = st.form_submit_button(label='Send')
 
-    if submit_button and user_input:
-        bot_message = generate_response(user_input)  # changed output to bot_message
+    if submit_button and user_input and api_key:
+        bot_message = generate_response(user_input, api_key)  # Use the provided API key
 
         # Add this block to write bot's message when user submits a message
         ##st.write(f"Bot: {bot_message}")
 if st.session_state['message_history']:
     with response_container:
-        for i, msg in enumerate(st.session_state['message_history']):  # use the original message history order
+        for i, msg in enumerate(st.session_state['message_history']):
             if msg['sender'] == 'User':
                 st.markdown(f"<div style='text-align: right; background-color: #e1ffc7; margin: 5px; padding: 10px; border-radius: 10px;'>You: {msg['message']}</div>", unsafe_allow_html=True)
             else:
