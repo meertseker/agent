@@ -9,37 +9,34 @@ st.markdown("<h1 style='text-align: center;'>MCG - My Country Guide</h1>", unsaf
 # Initialise session state variables
 if 'message_history' not in st.session_state:
     st.session_state['message_history'] = []
+if 'api_key' not in st.session_state:
+    st.session_state['api_key'] = ''
 
-# Sidebar
+# Sidebar for API key input
 st.sidebar.title("Settings")
-api_key = st.sidebar.text_input("Enter your API Key", type="password")
+st.sidebar.text("Enter your API Key:")
+api_key_input = st.sidebar.text_input("", key="api_key_input")
+if api_key_input:
+    st.session_state['api_key'] = api_key_input
 
 clear_button = st.sidebar.button("Clear Conversation", key="clear")
 
-# reset everything
+# Reset everything
 if clear_button:
     st.session_state['message_history'] = []
 
-# API Key Submit Button
-api_key_submit = st.sidebar.button("Submit API Key", key="api_submit")
-
-# Store the API key in session state
-if api_key_submit:
-    st.session_state["api_key"] = api_key
-
-# generate a response
-def generate_response(user_input, api_key):
+# Generate a response
+def generate_response(user_input):
     st.session_state['message_history'].append({"sender": "User", "message": user_input})
 
-    # The prompt for the chatbot
-    prompt = ("Sen bir profesyonel yurtdışı eğitim danışmanısın... [rest of the prompt]")
+    prompt = ("Sen bir profesyonel eğitim danışmanısın. Müşterilerin kanadada almayı planladıkları sehirlerdeki en iyi eğitim merkezlerini, üniversiteleri ve dil okullarını önererek, onlara rehberlik ediyorsun. Fiyatlandırma, burs imkanları, başvuru süreçleri ve yaşam şartları hakkında detaylı bilgi sağlayarak musteriyi memnun ediyorsunmerha, müşterilerin en bilinçli kararı vermelerine yardımcı oluyorsun. Her bir müşteri sorusu geldiğinde, en doğru ve kapsamlı bilgiyi sağlamak için gerekli tüm ayrıntıları sorma ve müşteriyle etkileşimde bulunma sorumluluğuna sahipsin. Müşterilere açık, doğru ve yararlı yanıtlar ver, ve gerektiğinde daha fazla bilgi almak için ek sorular sor.  musteriyi hicbirsey bilmiyor olarak dusun ve sohbetin yonunu sen belirle sorular sorarak tum bildigini anlatmak siteyen biri gibi davran gibi konus ve SAKIN ben bir dil modeliyim deme her müşteri farklı ihtiyaçlara sahip olabilir, bu yüzden her birine özel bir yaklaşım benimsemek önemlidir. Musterinin mesajini/seninle mesaj gecmisini paylasiyorum : ")
 
     last_three_messages = st.session_state['message_history'][-3:]
     formatted_message = prompt + ' '.join([f"{msg['sender']}: {msg['message']}" for msg in last_three_messages])
     
     headers = {
         'Content-Type': 'application/json',
-        'x-api-key': api_key
+        'x-api-key': st.session_state['api_key']
     }
 
     data = [{"sender": "User", "message": formatted_message}]
@@ -65,7 +62,7 @@ def generate_response(user_input, api_key):
 
 response_container = st.container()
 
-# container for text box
+# Container for text box
 container = st.container()
 
 with container:
@@ -73,19 +70,14 @@ with container:
         user_input = st.text_area("You:", key='input', height=100)
         submit_button = st.form_submit_button(label='Send')
 
-    # Check if API Key is available in session state
-    api_key_in_session = st.session_state.get("api_key", "")
+    if submit_button and user_input:
+        bot_message = generate_response(user_input)
 
-    if submit_button and user_input and api_key_in_session:
-        bot_message = generate_response(user_input, api_key_in_session)
-
-        # Display bot's message
+        # Add this block to write bot's message when user submits a message
         ##st.write(f"Bot: {bot_message}")
 
 if st.session_state['message_history']:
     with response_container:
-        for i, msg in enumerate(st.session_state['message_history']):
+        for i, msg in enumerate(st.session_state['message_history']):  # use the original message history order
             if msg['sender'] == 'User':
-                st.markdown(f"<div style='text-align: right; background-color: #e1ffc7; margin: 5px; padding: 10px; border-radius: 10px;'>You: {msg['message']}</div>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<div style='text-align: left; background-color: #e1f7ff; margin: 5px; padding: 10px; border-radius: 10px;'>Bot: {msg['message']}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='text-align: right; background-color: #e1ffc7; margin: 5px; padding: 10px; border-radius: 10px;'>You
