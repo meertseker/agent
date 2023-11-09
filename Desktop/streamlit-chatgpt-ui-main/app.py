@@ -20,6 +20,13 @@ clear_button = st.sidebar.button("Clear Conversation", key="clear")
 if clear_button:
     st.session_state['message_history'] = []
 
+# API Key Submit Button
+api_key_submit = st.sidebar.button("Submit API Key", key="api_submit")
+
+# Store the API key in session state
+if api_key_submit:
+    st.session_state["api_key"] = api_key
+
 # generate a response
 def generate_response(user_input, api_key):
     st.session_state['message_history'].append({"sender": "User", "message": user_input})
@@ -66,11 +73,15 @@ with container:
         user_input = st.text_area("You:", key='input', height=100)
         submit_button = st.form_submit_button(label='Send')
 
-    if submit_button and user_input and api_key:
-        bot_message = generate_response(user_input, api_key)  # Use the provided API key
+    # Check if API Key is available in session state
+    api_key_in_session = st.session_state.get("api_key", "")
 
-        # Add this block to write bot's message when user submits a message
+    if submit_button and user_input and api_key_in_session:
+        bot_message = generate_response(user_input, api_key_in_session)
+
+        # Display bot's message
         ##st.write(f"Bot: {bot_message}")
+
 if st.session_state['message_history']:
     with response_container:
         for i, msg in enumerate(st.session_state['message_history']):
